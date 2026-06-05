@@ -3,43 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GourmetSpot Pro - Combinaciones Totales y Control Absoluto</title>
+    <title>Venancio - Reservas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;600;700&display=swap');
         body { font-family: 'Poppins', sans-serif; }
+        .bg-olive-600 { background-color: #606c38; }
+        .bg-olive-700 { background-color: #4f5d2f; }
+        .bg-olive-800 { background-color: #283618; }
+        .text-olive-700 { color: #4f5d2f; }
+        .text-olive-800 { color: #283618; }
+        .border-olive-200 { border-color: #dde5b6; }
     </style>
 </head>
 <body class="bg-gradient-to-br from-amber-50 to-orange-100 min-h-screen text-gray-800">
 
-    <div id="auth-screen" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
-        <div class="bg-white w-full max-w-md p-8 rounded-3xl shadow-2xl border border-amber-100 text-center space-y-6">
-            <div class="w-20 h-20 bg-gradient-to-tr from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center mx-auto shadow-lg text-white text-3xl">
-                <i class="fas fa-utensils"></i>
-            </div>
-            <div>
-                <h2 class="text-2xl font-bold text-gray-800">Control de Acceso</h2>
-                <p class="text-sm text-gray-500 mt-1">Ingresa "admin" o "cliente" para continuar</p>
-            </div>
+    <!-- ================= PANTALLA DE ACCESO / LOGIN CON DECORACIÓN INICIAL ================= -->
+    <div id="auth-screen" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 border border-amber-100">
             
-            <div class="space-y-3">
-                <input type="text" id="role-input" placeholder="Rol: admin o cliente" class="w-full p-4 border-2 border-gray-100 rounded-2xl focus:ring-2 focus:ring-orange-400 focus:outline-none font-medium text-center uppercase tracking-wider">
-                <div id="client-name-auth-box" class="hidden space-y-2 pt-2 transition-all">
-                    <input type="text" id="role-client-name" placeholder="Tu Nombre y Apellido" class="w-full p-4 border-2 border-gray-100 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:outline-none text-center font-medium">
+            <!-- Columna Izquierda: Decoración inicial usando la imagen solicitada (image_df0f30.jpg) -->
+            <div class="hidden md:block relative min-h-[400px]">
+                <img src="image_df0f30.jpg" alt="Salón Venancio" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-olive-900/80 via-transparent to-black/20 flex flex-col justify-end p-8 text-white">
+                    <h3 class="text-2xl font-bold tracking-wide">Venancio</h3>
+                    <p class="text-sm text-amber-100/95 font-medium mt-1">Gestión profesional de salones y asignación de reservas en tiempo real.</p>
                 </div>
             </div>
 
-            <button onclick="procesarLogin()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-4 rounded-2xl shadow-md transition hover:from-orange-600">
-                Ingresar al Sistema
-            </button>
+            <!-- Columna Derecha: Formulario de Acceso -->
+            <div class="p-8 flex flex-col justify-center space-y-6 bg-white">
+                <div class="text-center space-y-2">
+                    <div class="w-16 h-16 bg-gradient-to-tr from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center mx-auto shadow-lg text-white text-2xl">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800 tracking-tight">Reservas</h2>
+                    <p class="text-xs text-gray-400">Ingresa "admin" o "cliente" para continuar</p>
+                </div>
+                
+                <div class="space-y-3">
+                    <input type="text" id="role-input" placeholder="Rol: admin o cliente" class="w-full p-4 border-2 border-gray-100 rounded-2xl focus:ring-2 focus:ring-orange-400 focus:outline-none font-medium text-center uppercase tracking-wider text-sm">
+                    <div id="client-name-auth-box" class="hidden space-y-2 pt-1 transition-all">
+                        <input type="text" id="role-client-name" placeholder="Tu Nombre y Apellido" class="w-full p-4 border-2 border-gray-100 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:outline-none text-center font-medium text-sm">
+                    </div>
+                </div>
+
+                <button onclick="procesarLogin()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-4 rounded-2xl shadow-md transition hover:from-orange-600 uppercase tracking-wider text-xs">
+                    Ingresar al Sistema
+                </button>
+            </div>
         </div>
     </div>
 
+    <!-- ================= MODAL VENTANA FLOTANTE: NUEVA MESA (ADMIN SOLO) ================= -->
+    <div id="admin-table-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border border-gray-200 relative space-y-4">
+            <div class="flex justify-between items-center pb-2 border-b">
+                <h3 class="text-lg font-bold text-olive-800"><i class="fas fa-hammer"></i> Instalar Nueva Mesa</h3>
+                <button onclick="cancelarModalMesa()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Identificador de Mesa</label>
+                    <input type="text" id="admin-table-number" placeholder="Ej: Mesa 12" class="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Comensales Máximos</label>
+                    <input type="number" id="admin-table-capacity" min="1" max="30" value="4" class="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Forma Geométrica</label>
+                    <select id="admin-table-shape" class="w-full p-3 border rounded-xl focus:outline-none">
+                        <option value="Cuadrada">Cuadrada ⏹️</option>
+                        <option value="Rectangular">Rectangular ▮</option>
+                        <option value="Redonda">Redonda 🟡</option>
+                    </select>
+                </div>
+            </div>
+            <div class="pt-2 flex gap-2">
+                <button onclick="cancelarModalMesa()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition text-sm">Cancelar</button>
+                <button onclick="agregarMesa()" class="w-1/2 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-2.5 rounded-xl shadow transition text-sm">Construir Mesa</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= NAVBAR GLOBAL ================= -->
     <nav class="bg-gradient-to-r from-orange-600 to-amber-500 text-white shadow-lg p-4 sticky top-0 z-40">
         <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <h1 class="text-2xl font-bold flex items-center gap-2">
-                <i class="fas fa-utensils text-yellow-300"></i> GourmetSpot <span class="text-xs bg-black/30 px-2 py-0.5 rounded font-mono">v4.2 Multi-Combo</span>
+                <i class="fas fa-utensils text-yellow-300"></i> Venancio - Reservas
             </h1>
             
             <div class="flex items-center gap-4 bg-black/20 px-4 py-2 rounded-2xl text-sm">
@@ -51,9 +105,21 @@
         </div>
     </nav>
 
+
+    <!-- ================= CONTENIDO DE LA APP ================= -->
     <main class="container mx-auto p-4 md:p-8">
         
+        <!-- LINEA DE ESTADOS / AGREGAR MESA CON LA NUEVA IMAGEN SELECCIONADA -->
         <div class="bg-white p-4 rounded-2xl shadow-md mb-8 border border-amber-100 flex flex-wrap gap-6 justify-center items-center text-xs font-bold uppercase tracking-wider">
+            
+            <!-- Botón interactivo modificado con la nueva imagen (image_df12ee.png) -->
+            <button id="btn-trigger-add-mesa" onclick="abrirModalMesa()" class="hidden relative group overflow-hidden w-12 h-12 rounded-xl border border-gray-200 shadow-sm transition hover:shadow-md hover:scale-105 active:scale-95 mr-2">
+                <img src="image_df12ee.png" alt="Nueva Mesa" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-olive-800/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-lg font-bold transition duration-200">
+                    +
+                </div>
+            </button>
+
             <span class="text-gray-500">Estados de Mesa:</span>
             <span class="flex items-center gap-2"><span class="w-4 h-4 bg-emerald-500 rounded-full inline-block shadow"></span> Libre</span>
             <span class="flex items-center gap-2"><span class="w-4 h-4 bg-orange-500 rounded-full inline-block shadow"></span> Reservada</span>
@@ -61,6 +127,7 @@
             <span class="flex items-center gap-2"><span class="w-4 h-4 bg-red-600 rounded-full inline-block shadow"></span> Ocupada</span>
         </div>
 
+        <!-- ================= PANEL DEL CLIENTE ================= -->
         <div id="vista-cliente" class="grid grid-cols-1 lg:grid-cols-3 gap-8 hidden">
             <div class="lg:col-span-1 space-y-6">
                 <div class="bg-white p-6 rounded-2xl shadow-xl border border-amber-100">
@@ -81,7 +148,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase">¿Cuántos comensales?</label>
-                            <input type="number" id="search-guests" min="1" max="50" value="6" class="w-full p-3 border border-gray-200 rounded-xl focus:outline-none">
+                            <input type="number" id="search-guests" min="1" max="50" value="2" class="w-full p-3 border border-gray-200 rounded-xl focus:outline-none">
                         </div>
                         <button onclick="actualizarPlanoCliente()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-3 rounded-xl shadow">
                             Buscar Disponibilidad
@@ -89,12 +156,14 @@
                     </div>
                 </div>
 
+                <!-- SUGERENCIA INTELIGENTE MULTI-MESA -->
                 <div id="smart-suggestion-box" class="bg-gradient-to-br from-indigo-600 to-violet-700 text-white p-6 rounded-2xl shadow-xl hidden">
                     <h3 class="text-base font-bold text-yellow-300 mb-2"><i class="fas fa-layer-group"></i> Combinaciones Disponibles</h3>
                     <p class="text-xs text-indigo-100 mb-4">No hay una mesa única libre para esa cantidad. Elegí la combinación de mesas que más te guste:</p>
                     <div id="suggestions-container" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
                 </div>
 
+                <!-- ALERTA DE OPTIMIZACIÓN DE SALÓN -->
                 <div id="optimization-alert-box" class="bg-gradient-to-br from-amber-500 to-orange-500 p-5 rounded-2xl hidden shadow-xl text-white">
                     <h4 class="text-sm font-bold flex items-center gap-2 text-yellow-200">
                         <i class="fas fa-lightbulb text-base animate-bounce"></i> ¡Optimización de Salón!
@@ -106,6 +175,7 @@
                     </div>
                 </div>
 
+                <!-- Formulario de Confirmación -->
                 <div id="booking-form-container" class="bg-white p-6 rounded-2xl shadow-xl border border-amber-100 hidden">
                     <h3 class="text-lg font-bold text-emerald-600 mb-2"><i class="fas fa-clipboard-check"></i> Completar Datos</h3>
                     <p id="booking-details-text" class="text-xs text-gray-600 mb-4 bg-emerald-50 p-3 rounded-lg border border-emerald-100"></p>
@@ -118,6 +188,7 @@
                 </div>
             </div>
 
+            <!-- Plano e Historial -->
             <div class="lg:col-span-2 space-y-6">
                 <div class="bg-white p-6 rounded-2xl shadow-xl border border-amber-100">
                     <h2 class="text-xl font-bold text-gray-700 mb-4"><i class="fas fa-map"></i> Mapa de Distribución</h2>
@@ -143,65 +214,56 @@
             </div>
         </div>
 
-        <div id="vista-admin" class="space-y-8 hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="bg-slate-800 text-white p-6 rounded-2xl shadow-xl flex flex-col justify-between">
-                    <div>
-                        <h2 class="text-xl font-bold text-yellow-400 mb-4"><i class="fas fa-hammer"></i> Nueva Mesa</h2>
-                        <div class="space-y-3 text-slate-800">
-                            <input type="text" id="admin-table-number" placeholder="Identificador (Ej: Mesa 8)" class="w-full p-3 rounded-xl focus:outline-none">
-                            <input type="number" id="admin-table-capacity" min="1" max="30" value="4" class="w-full p-3 rounded-xl focus:outline-none">
-                        </div>
-                    </div>
-                    <button onclick="agregarMesa()" class="w-full mt-4 bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold py-3 rounded-xl uppercase text-xs tracking-wider">
-                        Instalar en Salón
-                    </button>
-                </div>
 
-                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-xl border border-slate-200">
-                    <h2 class="text-xl font-bold text-slate-700 mb-4"><i class="fas fa-filter text-orange-500"></i> Filtros de Búsqueda de Turnos</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Mesa</label>
-                            <input type="text" id="filter-table" oninput="aplicarFiltrosAdmin()" placeholder="Buscar mesa..." class="w-full p-2.5 border rounded-xl text-sm focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Fecha</label>
-                            <input type="date" id="filter-date" onchange="aplicarFiltrosAdmin()" class="w-full p-2.5 border rounded-xl text-sm focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Capacidad Mínima</label>
-                            <input type="number" id="filter-capacity" oninput="aplicarFiltrosAdmin()" class="w-full p-2.5 border rounded-xl text-sm focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Estado</label>
-                            <select id="filter-status" onchange="aplicarFiltrosAdmin()" class="w-full p-2.5 border rounded-xl text-sm focus:outline-none">
-                                <option value="TODOS">Todos</option>
-                                <option value="LIBRE">Libre</option>
-                                <option value="RESERVADA">Reservada</option>
-                                <option value="OCUPADA">Ocupada</option>
-                            </select>
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Cliente Propietario</label>
-                            <input type="text" id="filter-client" oninput="aplicarFiltrosAdmin()" placeholder="Nombre del cliente..." class="w-full p-2.5 border rounded-xl text-sm focus:outline-none">
-                        </div>
+        <!-- ================= PANEL DEL ADMINISTRADOR ================= -->
+        <div id="vista-admin" class="space-y-8 hidden">
+            <!-- Barra superior de Filtros -->
+            <div class="bg-white p-5 rounded-2xl shadow-xl border border-slate-200">
+                <h2 class="text-sm font-bold text-olive-700 mb-3 flex items-center gap-2">
+                    <i class="fas fa-filter text-orange-500"></i> Filtros de Búsqueda de Turnos
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end text-xs">
+                    <div>
+                        <label class="block font-bold text-gray-500 uppercase mb-1">Mesa</label>
+                        <input type="text" id="filter-table" oninput="aplicarFiltrosAdmin()" placeholder="Buscar mesa..." class="w-full p-2 border rounded-xl focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-500 uppercase mb-1">Fecha</label>
+                        <input type="date" id="filter-date" onchange="aplicarFiltrosAdmin()" class="w-full p-2 border rounded-xl focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-500 uppercase mb-1">Comensales</label>
+                        <input type="number" id="filter-capacity" oninput="aplicarFiltrosAdmin()" placeholder="Mínimo asientos..." class="w-full p-2 border rounded-xl focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-500 uppercase mb-1">Estado</label>
+                        <select id="filter-status" onchange="aplicarFiltrosAdmin()" class="w-full p-2 border rounded-xl focus:outline-none">
+                            <option value="TODOS">Todos</option>
+                            <option value="LIBRE">Libre</option>
+                            <option value="RESERVADA">Reservada</option>
+                            <option value="OCUPADA">Ocupada</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-500 uppercase mb-1">Cliente</label>
+                        <input type="text" id="filter-client" oninput="aplicarFiltrosAdmin()" placeholder="Nombre..." class="w-full p-2 border rounded-xl focus:outline-none">
                     </div>
                 </div>
             </div>
 
+            <!-- TABLA CENTRAL: Gestión de Mesas -->
             <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-200">
-                <h2 class="text-xl font-bold text-slate-700 mb-4"><i class="fas fa-th-list text-blue-500"></i> Gestión de Mesas y Estados</h2>
+                <h2 class="text-xl font-bold text-olive-700 mb-4"><i class="fas fa-th-list text-orange-500"></i> Gestión de Mesas</h2>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-800 text-white text-xs uppercase font-bold tracking-wider">
+                            <tr class="bg-olive-800 text-white text-xs uppercase font-bold tracking-wider">
                                 <th class="p-4">Mesa</th>
-                                <th class="p-4">Capacidad</th>
-                                <th class="p-4">Estado Actual en Filtro</th>
-                                <th class="p-4">Fecha / Horario</th>
-                                <th class="p-4">Cliente Propietario</th>
-                                <th class="p-4 text-center">Acciones de Control</th>
+                                <th class="p-4 text-center"><i class="fas fa-users text-sm"></i></th>
+                                <th class="p-4">Estado</th>
+                                <th class="p-4">Fecha/hs</th>
+                                <th class="p-4">Cliente</th>
+                                <th class="p-4 text-center">Accion</th>
                             </tr>
                         </thead>
                         <tbody id="admin-master-table" class="text-sm divide-y divide-gray-100 font-medium"></tbody>
@@ -211,14 +273,15 @@
         </div>
     </main>
 
+    <!-- LOGICA EN JAVASCRIPT -->
     <script>
         // --- BASE DE DATOS EN MEMORIA ---
         let mesas = [
-            { id: 1, numero: "Mesa 1", capacidad: 2 },
-            { id: 2, numero: "Mesa 2", capacidad: 2 },
-            { id: 3, numero: "Mesa 3", capacidad: 4 },
-            { id: 4, numero: "Mesa 4", capacidad: 4 },
-            { id: 5, numero: "Mesa 5", capacidad: 6 }
+            { id: 1, numero: "Mesa 1", capacidad: 2, forma: "Cuadrada" },
+            { id: 2, numero: "Mesa 2", capacidad: 2, forma: "Cuadrada" },
+            { id: 3, numero: "Mesa 3", capacidad: 4, forma: "Rectangular" },
+            { id: 4, numero: "Mesa 4", capacidad: 4, forma: "Rectangular" },
+            { id: 5, numero: "Mesa 5", capacidad: 6, forma: "Redonda" }
         ];
 
         let reservas = [
@@ -227,7 +290,18 @@
 
         let usuarioSesion = { rol: null, nombre: null };
         let mesasSeleccionadasParaReservar = [];
-        let sugerenciaOptimizacionActiva = null;
+
+        // --- GESTIÓN INTERACTIVA DEL MODAL ---
+        function abrirModalMesa() {
+            document.getElementById("admin-table-modal").style.display = "flex";
+            document.getElementById("admin-table-modal").classList.remove("hidden");
+        }
+        
+        function cancelarModalMesa() {
+            document.getElementById("admin-table-number").value = "";
+            document.getElementById("admin-table-modal").style.display = "none";
+            document.getElementById("admin-table-modal").classList.add("hidden");
+        }
 
         // --- LOGIN ---
         function procesarLogin() {
@@ -236,9 +310,12 @@
 
             if (rInput === 'admin') {
                 usuarioSesion = { rol: 'admin', nombre: 'Admin' };
+                document.getElementById("btn-trigger-add-mesa").classList.remove("hidden");
+                document.getElementById("btn-trigger-add-mesa").classList.add("flex");
             } else if (rInput === 'cliente') {
                 if(!cName) return alert("Ingresa tu nombre.");
-                usuarioSesion = { rol: 'cliente', nombre: cName };
+                usuarioSesion = { rol: 'cliente', text: cName, nombre: cName };
+                document.getElementById("btn-trigger-add-mesa").classList.add("hidden");
             } else {
                 return alert("Escribe 'admin' o 'cliente'.");
             }
@@ -264,6 +341,7 @@
             document.getElementById("role-client-name").value = "";
             document.getElementById("vista-cliente").classList.add("hidden");
             document.getElementById("vista-admin").classList.add("hidden");
+            document.getElementById("btn-trigger-add-mesa").classList.add("hidden");
             document.getElementById("auth-screen").classList.remove("hidden");
         }
 
@@ -283,31 +361,22 @@
             }
         }
 
-
-        // ================= ALGORITMO: TODAS LAS COMBINACIONES POSIBLES (PUNTO 1 REVISADO) =================
+        // --- LOGICA MULTI-MESA ---
         function obtenerTodasLasCombinaciones(mesasLibres, comensales) {
             let resultado = [];
-            
-            // Función recursiva para calcular el conjunto de partes (Power Set) con poda de optimización
             function combinar(subconjunto, indice, sumaActual) {
                 if (sumaActual >= comensales) {
-                    // Si ya cubre la capacidad, guardamos la combinación y cortamos esa rama para no meter mesas de más innecesariamente
                     resultado.push({ mesas: [...subconjunto], total: sumaActual });
                     return;
                 }
-                
                 for (let i = indice; i < mesasLibres.length; i++) {
                     subconjunto.push(mesasLibres[i]);
                     combinar(subconjunto, i + 1, sumaActual + mesasLibres[i].capacidad);
-                    subconjunto.pop(); // Backtracking
+                    subconjunto.pop();
                 }
             }
-            
-            // Ordenamos de menor a mayor capacidad para ofrecer agrupaciones compactas primero
             let libresOrdenadas = [...mesasLibres].sort((a, b) => a.capacidad - b.capacidad);
             combinar([], 0, 0);
-            
-            // Retornamos las combinaciones ordenadas por la que desperdicie menos asientos
             return resultado.sort((a, b) => a.total - b.total);
         }
 
@@ -326,7 +395,6 @@
 
             if(!fecha) return;
 
-            // Encontrar qué mesas están libres en este bloque
             let libres = [];
             mesas.forEach(m => {
                 const ocupada = reservas.some(r => r.mesaIds.includes(m.id) && r.fecha === fecha && r.hora === hora);
@@ -335,23 +403,16 @@
 
             const hayMesaUnicaSuficiente = libres.some(m => m.capacidad >= qComensales);
 
-            // Requerimiento 1: Si no hay una única mesa, calcular y sugerir TODAS las combinaciones posibles
             if (!hayMesaUnicaSuficiente && qComensales > 1) {
                 const todasLasCombinaciones = obtenerTodasLasCombinaciones(libres, qComensales);
-                
                 if (todasLasCombinaciones.length > 0) {
                     sugBox.classList.remove("hidden");
-                    
-                    // Mostramos hasta un máximo de 5 combinaciones inteligentes para no saturar la pantalla
-                    todasLasCombinaciones.slice(0, 5).forEach((combo, index) => {
+                    todasLasCombinaciones.slice(0, 4).forEach((combo, index) => {
                         const btn = document.createElement("button");
                         btn.className = "w-full text-left bg-white/10 hover:bg-white/25 p-2.5 rounded-xl text-xs flex justify-between items-center transition border border-white/20 font-semibold";
-                        
                         const nombresCombo = combo.mesas.map(m => m.numero).join(" + ");
-                        btn.innerHTML = `
-                            <span>Option ${index + 1}: [${nombresCombo}]</span> 
-                            <span class="bg-yellow-400 text-slate-900 px-2 py-0.5 rounded font-bold">Asientos: ${combo.total}</span>
-                        `;
+                        btn.innerHTML = `<span>Combo ${index + 1}: [${nombresCombo}]</span> <span class="bg-yellow-400 text-slate-900 px-2 py-0.5 rounded font-bold">Cap: ${combo.total}</span>`;
+                        
                         btn.onclick = () => { 
                             mesasSeleccionadasParaReservar = combo.mesas; 
                             abrirConfirmacionCliente(); 
@@ -361,47 +422,71 @@
                 }
             }
 
-            // Pintar mapa físico de las mesas
             mesas.forEach(m => {
                 const resAsociada = reservas.find(r => r.mesaIds.includes(m.id) && r.fecha === fecha && r.hora === hora);
                 const seleccionada = mesasSeleccionadasParaReservar.some(s => s.id === m.id);
                 const quedaChica = m.capacidad < qComensales;
 
-                let colorClass = "", badgeColor = "", textoEstado = "", clickHabilitado = false;
+                let colorClass = "", textoEstado = "", clickHabilitado = false;
+                let shapeColor = "", borderShapeColor = "", textLabelColor = "";
 
                 if (resAsociada) {
                     if (resAsociada.estado === "OCUPADA") {
-                        colorClass = "bg-red-100 border-2 border-red-400 text-red-800 opacity-80 cursor-not-allowed";
-                        badgeColor = "bg-red-600 text-white";
+                        colorClass = "bg-white border border-gray-100 text-red-800 opacity-80 cursor-not-allowed";
+                        shapeColor = "bg-red-500";
+                        borderShapeColor = "border-red-700";
+                        textLabelColor = "text-red-700";
                         textoEstado = "Ocupada";
                     } else {
-                        colorClass = "bg-orange-100 border-2 border-orange-300 text-orange-800 opacity-80 cursor-not-allowed";
-                        badgeColor = "bg-orange-500 text-white";
+                        colorClass = "bg-white border border-gray-100 text-orange-800 opacity-80 cursor-not-allowed";
+                        shapeColor = "bg-orange-400";
+                        borderShapeColor = "border-orange-600";
+                        textLabelColor = "text-orange-600";
                         textoEstado = "Reservada";
                     }
                 } else if (seleccionada) {
-                    colorClass = "bg-indigo-600 text-white border-4 border-indigo-700 shadow-xl font-bold";
-                    badgeColor = "bg-yellow-400 text-slate-900";
+                    colorClass = "bg-white border-2 border-indigo-400 text-indigo-950 font-bold shadow-lg transform scale-105";
+                    shapeColor = "bg-indigo-600";
+                    borderShapeColor = "border-indigo-800";
+                    textLabelColor = "text-indigo-600";
                     textoEstado = "Seleccionada";
                 } else if (quedaChica && hayMesaUnicaSuficiente) {
-                    colorClass = "bg-yellow-100 border-2 border-yellow-300 text-yellow-800 opacity-60";
-                    badgeColor = "bg-yellow-500 text-slate-950";
+                    colorClass = "bg-white border border-gray-100 text-yellow-800 opacity-60";
+                    shapeColor = "bg-yellow-400";
+                    borderShapeColor = "border-yellow-500";
+                    textLabelColor = "text-yellow-600";
                     textoEstado = "Queda Chica";
                     clickHabilitado = true;
                 } else {
-                    colorClass = "bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-300 text-emerald-900 shadow-sm cursor-pointer";
-                    badgeColor = "bg-emerald-600 text-white";
+                    colorClass = "bg-white hover:bg-slate-50 border border-gray-200 text-emerald-900 shadow-sm cursor-pointer";
+                    shapeColor = "bg-emerald-500";
+                    borderShapeColor = "border-emerald-700";
+                    textLabelColor = "text-emerald-600";
                     textoEstado = "Libre";
                     clickHabilitado = true;
                 }
 
+                const soloNumeroId = m.numero.replace(/^\D+/g, '');
+
+                let figuraHtml = "";
+                const baseShapeClasses = `flex items-center justify-center font-bold text-3xl border-4 text-amber-100 shadow-sm transition-all ${shapeColor} ${borderShapeColor}`;
+
+                if (m.forma === "Redonda") {
+                    figuraHtml = `<div class="w-20 h-20 rounded-full ${baseShapeClasses}">${m.capacidad}</div>`;
+                } else if (m.forma === "Rectangular") {
+                    figuraHtml = `<div class="w-28 h-16 ${baseShapeClasses}">${m.capacidad}</div>`;
+                } else {
+                    figuraHtml = `<div class="w-20 h-20 ${baseShapeClasses}">${m.capacidad}</div>`;
+                }
+
                 const div = document.createElement("div");
-                div.className = `p-4 rounded-2xl flex flex-col items-center justify-between text-center min-h-[140px] transition ${colorClass}`;
+                div.className = `p-4 rounded-3xl flex flex-col items-center justify-between text-center min-h-[180px] transition ${colorClass}`;
                 div.innerHTML = `
-                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${badgeColor}">Cap: ${m.capacidad}</span>
-                    <i class="fas fa-chair text-xl my-2"></i>
-                    <h3 class="font-bold text-sm">${m.numero}</h3>
-                    <span class="text-xs font-semibold block mt-1">${textoEstado}</span>
+                    <h3 class="text-base font-bold text-black tracking-tight mb-1">Mesa nro ${soloNumeroId}</h3>
+                    <div class="my-2 flex items-center justify-center h-20">
+                        ${figuraHtml}
+                    </div>
+                    <span class="text-sm font-bold block mt-1 ${textLabelColor}">${textoEstado}</span>
                 `;
 
                 if(clickHabilitado) {
@@ -411,13 +496,10 @@
             });
         }
 
-        // Evaluar optimización de salón manual
         function evaluarSeleccionMesaManual(mesaElegida, mesasLibres, comensalesRequeridos) {
             const optBox = document.getElementById("optimization-alert-box");
             const optText = document.getElementById("optimization-alert-text");
-            const formContainer = document.getElementById("booking-form-container");
-            
-            formContainer.classList.add("hidden");
+            document.getElementById("booking-form-container").classList.add("hidden");
             optBox.classList.add("hidden");
 
             let mesaMasOptima = null;
@@ -432,25 +514,21 @@
             if (mesaElegida.capacidad >= comensalesRequeridos && mesaMasOptima) {
                 mesasSeleccionadasParaReservar = [mesaElegida];
                 optBox.classList.remove("hidden");
-                optText.innerHTML = `
-                    Elegiste la <strong>${mesaElegida.numero}</strong> (Capacidad: ${mesaElegida.capacidad} personas) para tu grupo de <strong>${comensalesRequeridos}</strong>.<br><br>
-                    ¡Ojo! Tenemos la <strong>${mesaMasOptima.numero}</strong> libre, que cuenta con <strong>${mesaMasOptima.capacidad} asientos</strong> y es ideal para vos.
-                `;
-
+                optText.innerHTML = `Elegiste la <strong>${mesaElegida.numero}</strong> para tu grupo de <strong>${comensalesRequeridos}</strong>.<br><br>Tenemos la <strong>${mesaMasOptima.numero}</strong> (Capacidad: ${mesaMasOptima.capacidad}) libre.`;
+                
                 document.getElementById("btn-aceptar-opt").innerText = `Sí, cambiar por ${mesaMasOptima.numero}`;
-                document.getElementById("btn-aceptar-opt").onclick = () => {
-                    mesasSeleccionadasParaReservar = [mesaMasOptima];
-                    optBox.classList.add("hidden");
-                    abrirConfirmacionCliente();
+                document.getElementById("btn-aceptar-opt").onclick = () => { 
+                    mesasSeleccionadasParaReservar = [mesaMasOptima]; 
+                    optBox.classList.add("hidden"); 
+                    abrirConfirmacionCliente(); 
                 };
-
+                
                 document.getElementById("btn-ignorar-opt").innerText = `Mantener mi selección (${mesaElegida.numero})`;
-                document.getElementById("btn-ignorar-opt").onclick = () => {
-                    mesasSeleccionadasParaReservar = [mesaElegida];
-                    optBox.classList.add("hidden");
-                    abrirConfirmacionCliente();
+                document.getElementById("btn-ignorar-opt").onclick = () => { 
+                    mesasSeleccionadasParaReservar = [mesaElegida]; 
+                    optBox.classList.add("hidden"); 
+                    abrirConfirmacionCliente(); 
                 };
-
                 reRenderPlanoLigero();
                 return;
             }
@@ -462,11 +540,13 @@
         function reRenderPlanoLigero() {
             const mapContainer = document.getElementById("restaurant-map-cliente");
             Array.from(mapContainer.children).forEach((div, index) => {
-                const m = mesas[index];
-                if(!m) return;
-                const seleccionada = mesasSeleccionadasParaReservar.some(s => s.id === m.id);
-                if(seleccionada) {
-                    div.className = "p-4 rounded-2xl flex flex-col items-center justify-between text-center min-h-[140px] transition bg-indigo-600 text-white border-4 border-indigo-700 shadow-xl font-bold";
+                const m = mesas[index]; if(!m) return;
+                
+                const esParteDeSeleccion = mesasSeleccionadasParaReservar.some(s => s.id === m.id);
+                if(esParteDeSeleccion) {
+                    div.className = "p-4 rounded-3xl flex flex-col items-center justify-between text-center min-h-[180px] transition bg-white border-2 border-indigo-400 text-indigo-950 font-bold shadow-lg";
+                } else {
+                    actualizarPlanoCliente();
                 }
             });
         }
@@ -479,9 +559,6 @@
         }
 
         function confirmarReservaCliente() {
-            const telefono = document.getElementById("client-phone").value.trim();
-            if(!telefono) return alert("Por favor escribe tu teléfono.");
-
             reservas.push({
                 id: Date.now(),
                 mesaIds: mesasSeleccionadasParaReservar.map(m => m.id),
@@ -491,8 +568,7 @@
                 personas: parseInt(document.getElementById("search-guests").value),
                 estado: "RESERVADA"
             });
-
-            alert("¡Turno reservado exitosamente!");
+            alert("¡Turno reservado!");
             mesasSeleccionadasParaReservar = [];
             document.getElementById("booking-form-container").classList.add("hidden");
             document.getElementById("optimization-alert-box").classList.add("hidden");
@@ -504,80 +580,66 @@
             const container = document.getElementById("reservations-list-cliente");
             container.innerHTML = "";
             const mReservas = reservas.filter(r => r.cliente.toLowerCase() === usuarioSesion.nombre.toLowerCase());
-
             if(mReservas.length === 0) {
-                container.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400 italic">No posees turnos asignados.</td></tr>`;
-                return;
+                container.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400 italic">Sin turnos asignados.</td></tr>`; return;
             }
-
             mReservas.forEach(r => {
-                const nombresMesas = r.mesaIds.map(id => mesas.find(m => m.id === id)?.numero || 'Mesa Removida').join(" + ");
+                const nombresMesas = r.mesaIds.map(id => mesas.find(m => m.id === id)?.numero || 'Mesa').join(" + ");
                 const tr = document.createElement("tr");
                 tr.className = "hover:bg-slate-50 text-gray-700 font-medium";
-                tr.innerHTML = `
-                    <td class="p-3 text-orange-600 font-bold">${nombresMesas}</td>
-                    <td class="p-3 text-xs">${r.fecha} — <span class="bg-slate-200 px-1.5 py-0.5 rounded font-bold">${r.hora} hs</span></td>
-                    <td class="p-3 text-xs">${r.personas} comensales</td>
-                    <td class="p-3">
-                        <button onclick="cancelarReservaCliente(${r.id})" class="text-red-500 font-bold text-xs hover:underline"><i class="fas fa-trash-alt"></i> Cancelar</button>
-                    </td>
-                `;
+                tr.innerHTML = `<td class="p-3 text-orange-600 font-bold">${nombresMesas}</td><td class="p-3 text-xs">${r.fecha} — ${r.hora} hs</td><td class="p-3 text-xs">${r.personas} com.</td><td class="p-3"><button onclick="cancelarReservaCliente(${r.id})" class="text-red-500 text-xs font-bold"><i class="fas fa-trash"></i> Cancelar</button></td>`;
                 container.appendChild(tr);
             });
         }
 
         function cancelarReservaCliente(id) {
-            if(confirm("¿Cancelar tu turno definitivamente?")) {
-                reservas = reservas.filter(r => r.id !== id);
-                renderizarVistasPorRol();
-            }
+            if(confirm("¿Cancelar turno?")) { reservas = reservas.filter(r => r.id !== id); renderizarVistasPorRol(); }
         }
 
 
-        // --- PANEL ADMINISTRADOR (CRUD, FILTROS Y EN VIVO) ---
+        // --- PANEL ADMINISTRADOR (PROCESOS) ---
         function agregarMesa() {
             const num = document.getElementById("admin-table-number").value.trim();
             const cap = parseInt(document.getElementById("admin-table-capacity").value);
-            if(!num || isNaN(cap) || cap <= 0) return alert("Completa los campos.");
+            const forma = document.getElementById("admin-table-shape").value;
 
-            mesas.push({ id: Date.now(), numero: num, capacidad: cap });
+            if(!num || isNaN(cap) || cap <= 0) return alert("Completa los campos.");
+            
+            mesas.push({ id: Date.now(), numero: num, capacidad: cap, forma: forma });
+            alert(`Alta de "${num}" con éxito.`);
+            
             document.getElementById("admin-table-number").value = "";
+            cancelarModalMesa();
             aplicarFiltrosAdmin();
         }
 
         function modificarCapacidadMesa(id) {
-            const m = mesas.find(mesa => mesa.id === id);
-            if(!m) return;
+            const m = mesas.find(mesa => mesa.id === id); if(!m) return;
             const nuevaCapacidad = prompt(`Modificar asientos para ${m.numero}:`, m.capacidad);
-            const numeroValidado = parseInt(nuevaCapacidad);
-            if(!nuevaCapacidad || isNaN(numeroValidado) || numeroValidado <= 0) return;
-
+            const numeroValidado = parseInt(nuevaCapacidad); if(!nuevaCapacidad || isNaN(numeroValidado) || numeroValidado <= 0) return;
             m.capacidad = numeroValidado;
             aplicarFiltrosAdmin();
         }
 
         function eliminarMesaAdmin(id) {
-            if(confirm("¿Eliminar la mesa física? Se cancelarán sus reservas correspondientes.")) {
+            if(confirm("¿Eliminar mesa física del salón?")) {
                 mesas = mesas.filter(m => m.id !== id);
                 reservas = reservas.filter(r => !r.mesaIds.includes(id));
                 aplicarFiltrosAdmin();
             }
         }
 
-
-        // ================= CAMBIO EN BLOQUE (PUNTO 2 REVISADO) =================
         function cambiarMesaA_Ocupada(reservaId) {
             const res = reservas.find(r => r.id === reservaId);
             if(res) {
-                // Modifica el estado global de la reserva. Al renderizar, afectará a cada ID dentro del array mesaIds
                 res.estado = "OCUPADA";
-                alert(`¡Servicio iniciado! Todas las mesas de la combinación de ${res.cliente} pasaron a estado 'Ocupada'.`);
+                alert(`¡Servicio iniciado! Mesas de ${res.cliente} pasaron a estado 'Ocupada'.`);
                 aplicarFiltrosAdmin();
             }
         }
 
         function liberarMesaAdmin(reservaId) {
-            if(confirm("¿Liberar la combinación de mesas y terminar el servicio?")) {
+            if(confirm("¿Liberar la combinación de mesas?")) {
                 reservas = reservas.filter(r => r.id !== reservaId);
                 aplicarFiltrosAdmin();
             }
@@ -608,56 +670,43 @@
                     reservasDeMesa.forEach(r => {
                         if(fStatus !== 'TODOS' && fStatus !== r.estado) return;
                         if(fClient && !r.cliente.toLowerCase().includes(fClient)) return;
-                        
-                        // Muestra los nombres de las mesas compañeras en el bloque de la reserva
                         const nombresBloque = r.mesaIds.map(id => mesas.find(x => x.id === id)?.numero || '').join(" + ");
-                        inyectarFilaAdmin(tbody, m, r.estado, fechaAEvaluar, `${r.hora} hs`, `${r.cliente} (Bloque: ${nombresBloque})`, r.id);
+                        inyectarFilaAdmin(tbody, m, r.estado, fechaAEvaluar, `${r.hora} hs`, `${r.cliente} (Combo: ${nombresBloque})`, r.id);
                     });
                 }
             });
-
-            if(tbody.children.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-400 italic">Sin resultados para los filtros indicados.</td></tr>`;
-            }
         }
 
         function inyectarFilaAdmin(tbody, mesa, estado, fecha, hora, cliente, reservaId) {
-            let badgeEstilo = "";
-            let botonAccionAdicional = "";
+            let badgeEstilo = ""; let botonAccionAdicional = "";
 
             if(estado === 'LIBRE') {
                 badgeEstilo = "bg-emerald-500 text-white";
-                botonAccionAdicional = `<span class="text-xs text-slate-400 italic">Vacio</span>`;
+                botonAccionAdicional = `<span class="text-xs text-slate-400 italic font-normal">Sin clientes</span>`;
             } else if (estado === 'RESERVADA') {
                 badgeEstilo = "bg-orange-500 text-white";
-                botonAccionAdicional = `
-                    <button onclick="cambiarMesaA_Ocupada(${reservaId})" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-3 py-1 rounded shadow transition">
-                        <i class="fas fa-street-view"></i> Recibir (Ocupar Todo)
-                    </button>
-                `;
+                botonAccionAdicional = `<button onclick="cambiarMesaA_Ocupada(${reservaId})" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-2.5 py-1 rounded shadow transition"><i class="fas fa-street-view"></i> Recibir (Ocupar)</button>`;
             } else if (estado === 'OCUPADA') {
                 badgeEstilo = "bg-red-600 text-white";
-                botonAccionAdicional = `
-                    <button onclick="liberarMesaAdmin(${reservaId})" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1 rounded shadow transition">
-                        <i class="fas fa-door-open"></i> Liberar Todo
-                    </button>
-                `;
+                botonAccionAdicional = ` <button onclick="liberarMesaAdmin(${reservaId})" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-2.5 py-1 rounded shadow transition"><i class="fas fa-door-open"></i> Liberar</button>`;
             }
 
             const tr = document.createElement("tr");
             tr.className = "hover:bg-slate-50 transition border-b border-gray-100";
             tr.innerHTML = `
-                <td class="p-4 font-bold text-slate-900">${mesa.numero}</td>
-                <td class="p-4">
-                    <span class="bg-slate-100 px-2 py-0.5 rounded font-bold text-xs">${mesa.capacidad} asientos</span>
-                    <button onclick="modificarCapacidadMesa(${mesa.id})" class="ml-2 text-blue-500 text-xs shadow-sm"><i class="fas fa-edit"></i></button>
+                <td class="p-4 font-bold text-slate-900">${mesa.numero} <span class="text-[10px] text-gray-400 block font-normal">(${mesa.forma || 'Cuadrada'})</span></td>
+                <td class="p-4 text-center">
+                    <span class="font-bold text-xs text-slate-700">${mesa.capacidad}</span>
+                    <button onclick="modificarCapacidadMesa(${mesa.id})" class="ml-1 text-blue-500 text-xs"><i class="fas fa-edit"></i></button>
                 </td>
-                <td class="p-4"><span class="px-2.5 py-0.5 rounded text-xs font-bold inline-block ${badgeEstilo}">${estado}</span></td>
-                <td class="p-4 text-xs font-semibold text-gray-500">${fecha} | <span class="text-slate-950">${hora}</span></td>
-                <td class="p-4 text-slate-900">${cliente}</td>
-                <td class="p-4 flex gap-2 justify-center items-center">
-                    ${botonAccionAdicional}
-                    <button onclick="eliminarMesaAdmin(${mesa.id})" class="text-red-500 font-bold text-xs ml-2 hover:underline"><i class="fas fa-trash-alt"></i> Quitar</button>
+                <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-bold inline-block ${badgeEstilo}">${estado}</span></td>
+                <td class="p-4 text-xs font-semibold text-gray-600">${fecha} — ${hora}</td>
+                <td class="p-4 text-slate-900 text-xs">${cliente}</td>
+                <td class="p-4 text-center">
+                    <div class="flex gap-2 justify-center items-center">
+                        ${botonAccionAdicional}
+                        <button onclick="eliminarMesaAdmin(${mesa.id})" class="text-red-500 font-bold text-xs ml-2 hover:text-red-700"><i class="fas fa-trash-alt"></i> Quitar</button>
+                    </div>
                 </td>
             `;
             tbody.appendChild(tr);
